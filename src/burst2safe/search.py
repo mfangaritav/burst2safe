@@ -1,3 +1,4 @@
+import logging
 import warnings
 from collections.abc import Iterable
 from datetime import datetime
@@ -8,6 +9,9 @@ import asf_search
 import numpy as np
 from asf_search.Products.S1BurstProduct import S1BurstProduct
 from shapely.geometry import Polygon
+
+
+log = logging.getLogger(__name__)
 
 
 warnings.filterwarnings('ignore')
@@ -244,10 +248,10 @@ def find_bursts(
         min_bursts: The minimum number of bursts per swath (default: 1)
     """
     if granules:
-        print('Using granule search...')
+        log.info('Using granule search...')
         results = find_granules(granules)
     elif orbit and footprint:
-        print('Using burst group search...')
+        log.info('Using burst group search...')
         results = find_group(orbit, footprint, polarizations, swaths, mode, min_bursts)
     else:
         raise ValueError(

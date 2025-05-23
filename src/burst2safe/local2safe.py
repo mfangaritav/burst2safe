@@ -3,6 +3,7 @@
 
 import argparse
 import json
+import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Optional, Union, cast
@@ -10,6 +11,9 @@ from typing import Optional, Union, cast
 from burst2safe import utils
 from burst2safe.burst_id import calculate_burstid
 from burst2safe.safe import Safe
+
+
+log = logging.getLogger(__name__)
 
 
 def burst_info_from_local(
@@ -130,15 +134,15 @@ def local2safe(
     work_dir = utils.optional_wd(work_dir)
 
     burst_infos = load_burst_infos(slc_dict)
-    print(f'Found {len(burst_infos)} burst(s).')
+    log.info(f'Found {len(burst_infos)} burst(s).')
 
-    print('Check burst group validity...')
+    log.info('Check burst group validity...')
     Safe.check_group_validity(burst_infos)
-    print('Creating SAFE...')
+    log.info('Creating SAFE...')
 
     safe = Safe(burst_infos, all_anns, work_dir)
     safe_path = safe.create_safe()
-    print('SAFE created!')
+    log.info('SAFE created!')
 
     if not keep_files:
         safe.cleanup()
